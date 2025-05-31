@@ -1,0 +1,364 @@
+openapi: 3.0.4
+info:
+  title: Swagger Altergram
+  description: |-
+   Описание REST API для учебного проекта социальная сеть для путешественников Altergram
+   
+   В рамках обучения System Design мая 2025 г.
+   
+   Автор: Сапрыкин Сергей
+  version: 0.0.1
+externalDocs:
+  description: Architecture of Project on Github
+  url: https://github.com/Saprykin3321/social_network_system_design
+servers:
+  - url: https://altergram/api/v1
+    description: dev server
+tags:
+  - name: post
+    description: Управление постом 
+  - name: comment
+    description: Управление комментариями к посту
+  - name: review
+    description: Управления оценками постов
+paths:
+  /post/list:
+    get:
+      tags:
+        - post
+      summary: Получение списка постов с учетом пагинации
+      operationId: getPostList
+      responses:
+        '200':
+          description: Получен список постов
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Posts'
+        default:
+          description: Неожиданная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /post:
+    post:
+      tags:
+        - post
+      summary: Создание поста
+      operationId: createPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+      responses:
+        '200':
+          description: Пост успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        default:
+          description: Неожиданная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /post/{postId}:  
+    put:
+      tags:
+        - post
+      summary: Редактирование поста
+      operationId: putPost
+      parameters:
+       - name: postId
+         in: path
+         required: true
+         description: Идентификатор поста
+         schema: 
+          type: string
+         example: f4469e3b-2c62-4695-a525-8fa3c1624bcf
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+      responses:
+        '200':
+          description: Пост успешно обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        default:
+          description: Неожиданная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags:
+       - post
+      summary: Удаление поста
+      operationId: deletePost
+      parameters:
+       - name: postId
+         in: path
+         required: true
+         description: Идентификатор поста
+         schema: 
+          type: string
+         example: f4469e3b-2c62-4695-a525-8fa3c1624bcf
+      responses:
+        '200':
+          description: Пост успешно удален
+          content:
+            application/json: {}
+        'default':
+          description: Ошибка
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /comment/{postId}/list:
+    get:
+      tags:
+       - comment
+      summary: Получение комментариев к посту
+      operationId: getCommentList
+      parameters:
+       - name: postId
+         in: path
+         required: true
+         description: Идентификатор игрушки
+         schema: 
+          type: string
+      responses:
+        '200':
+          description: Комментарии получены
+          content:
+            application/json:
+              schema:
+               $ref: "#/components/schemas/Comments"
+        'default':
+          description: Ошибка при создании поста
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /comment/{postId}:
+    post:
+      tags:
+       - comment
+      summary: Создание комментария к посту
+      operationId: postComment
+      parameters:
+       - name: postId
+         in: path
+         required: true
+         description: Идентификатор поста
+         schema: 
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Comment"
+      responses:
+        '200':
+          description: Комментарий создан
+          content:
+            application/json:
+              schema:
+               $ref: "#/components/schemas/Comment"
+        'default':
+          description: Ошибка при создании поста
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /review/{postId}: 
+    post:
+      tags:
+       - review
+      summary: Создание оценки к посту
+      operationId: postReview
+      parameters:
+       - name: postId
+         in: path
+         required: true
+         description: Идентификатор поста
+         schema: 
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Review"
+      responses:
+        '200':
+          description: Оценка оставлена
+          content:
+            application/json:
+              schema:
+               $ref: "#/components/schemas/Review"
+        'default':
+          description: Ошибка при создании оценки
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /review/{postId}/summary:
+    get:
+      tags:
+        - review
+      summary: Получение оценок к посту
+      operationId: getReviews
+      parameters:
+       - name: postId
+         in: path
+         required: true
+         description: Идентификатор поста
+         schema: 
+          type: string
+      responses:
+        '200':
+          description: Оценка оставлена
+          content:
+            application/json:
+              schema:
+               $ref: "#/components/schemas/Reviews"
+        'default':
+          description: Ошибка при создании оценки
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
+            
+components:
+  schemas:
+    Post:
+      type: object
+      required:
+       - user_id
+       - post_description
+      properties:
+        post_id:
+          type: string
+          description: Идентификатор поста
+          example: 01fa1227-5013-45a0-8702-88ab918944cd
+        user_id:
+          type: string
+          description: Идентификатор автора поста
+          example: ab7c3f34-d399-43ca-9cd7-4b3111963a9f
+        post_description:
+          type: string
+          description: Описание поста
+          example: Это пост с путешествия в Париже
+        latitude:
+          type: number
+          description: Широта
+          example: 77.12
+        longitude:
+          type: string
+          description: Долгота
+          example: 34.11      
+    Posts:
+      type: array
+      items:
+        $ref: "#/components/schemas/Post"  
+    Comment:
+      type: object
+      required:
+       - post_id
+       - user_id
+       - comment_text
+      properties:
+        id:
+          type: string
+          description: Идентификатор комментария
+          example: 1fe29361-6266-4ef3-abd0-93d59c7d7658
+        post_id:
+          type: string
+          description: Идентификатор поста, к которому оставлен коммент
+          example: 261d7602-cf7a-4122-a1cb-652c2c34d419
+        user_id:
+          type: string
+          description: Идентификатор автора комментария
+          example: f4469e3b-2c62-4695-a525-8fa3c1624bcf
+        comment_text:
+          type: string
+          description: Текст комментария
+          example: Классный пост
+    Comments:
+      type: array
+      items:
+        $ref: "#/components/schemas/Comment"
+    Review:
+      type: object
+      required:
+        - post_id
+        - user_id
+        - user_grade
+      properties:
+        post_id:
+          type: string
+          description: Идентификатор поста, к которому оставлена оценка
+          example: 261d7602-cf7a-4122-a1cb-652c2c34d419
+        user_id:
+          type: string
+          description: Идентификатор автора оценки
+          example: f4469e3b-2c62-4695-a525-8fa3c1624bcf
+        user_grade:
+          type: string
+          description: like/dislike
+          example: Like
+    Reviews:
+      type: object
+      required:
+        - post_id
+        - user_id
+        - user_grade
+      properties:
+        summary_like:
+          type: integer
+          description: Количество лайков
+          example: 13        
+        summary_dislike:
+          type: integer
+          description: Количество дизлайков
+          example: 13
+        user_id:
+          type: string
+          description: Идентификатор автора оценки
+          example: f4469e3b-2c62-4695-a525-8fa3c1624bcf
+        user_grade:
+          type: string
+          description: like/dislike
+          example: Like
+    Error:
+      type: object
+      required:
+       - code
+       - message
+      properties:
+       code:
+        type: integer
+        description: Код ошибки
+        example: 400
+       message:
+        type: string
+        description: Описание ошибки
+        example: "Некорретно введены данные"
+  securitySchemes:
+    petstore_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://petstore3.swagger.io/oauth/authorize
+          scopes:
+            "write:pets": modify pets in your account
+            "read:pets": read your pets
