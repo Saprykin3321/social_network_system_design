@@ -193,4 +193,6 @@ SSD:
 
 Диаграмма Context C4:
 
+![Context C4](architecture/с4-context.jpg)
+
 Диаграмма Containers C4:
