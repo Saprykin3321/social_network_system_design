@@ -83,7 +83,16 @@ System Design education (may 2025)
 Одна оценка занимает 33 байта  
 Один комментарий занимает 2032 байт  
 
-<spoiler title="Подробности расчета">
+
+<details>
+  <summary>Подробности расчета</summary>
+  
+  **post**: 16 байт (ID) + 16 байт (User_ID) + 4000 байт (description с учетом смайликов и русскоязычных символов) + 8 байт (latitude) + 8 байт (longitude) + 8 байт (created_at) + 8 байт (updated_at) = 4064 байт  
+  **image**: 16 байт (ID) + 16 байт (post_id) + 60 байт (image_url) = 92 байта  
+  **review**: 16 байт (ID) + 16 байт (post_id) + 1 байт (grade) = 33 байта  
+  **comment**: 16 байт (ID) + 16 байт (post_id) + 2000 байт (comment с учетом смайликов и русскоязычных смиволов) = 2032 байт  
+
+</details>
 
 post: 16 байт (ID) + 16 байт (User_ID) + 4000 байт (description с учетом смайликов и русскоязычных символов) + 8 байт (latitude) + 8 байт (longitude) + 8 байт (created_at) + 8 байт (updated_at) = 4064 байт
 image: 16 байт (ID) + 16 байт (post_id) + 60 байт (image_url) = 92 байта
