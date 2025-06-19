@@ -77,7 +77,7 @@ System Design education (may 2025)
 ---
 # API-запросы <a name="API_запросы"></a>
 
-См. [Swagger][api/rest_api.yml]
+См. [Swagger](api/rest_api.yml)
 
 ---
 
